@@ -111,6 +111,9 @@ export class Generador {
         this.instrucciones.push(new Instruction('beq', rs1, rs2, label))
     }
 
+    beqz(rs1, label) {
+        this.instrucciones.push(new Instruction('beqz', rs1, label));
+    }
     /**
      * !=
      */
@@ -123,6 +126,10 @@ export class Generador {
      */
     blt(rs1, rs2, label) {
         this.instrucciones.push(new Instruction('blt', rs1, rs2, label))
+    }
+
+    bnez(rs1, label){
+        this.instrucciones.push(new Instruction('bnez', rs1, label))
     }
 
     /**
@@ -149,6 +156,9 @@ export class Generador {
 
     li(rd, inmediato) {
         this.instrucciones.push(new Instruction('li', rd, inmediato))
+    }
+    loadType(rd, rs1, inmediato){
+        this.instrucciones.push(new Instruction('lw', rd, `${inmediato}(${rs1})`))
     }
 
     la(rd, label) {
@@ -185,6 +195,9 @@ export class Generador {
     j(label) {
         this.instrucciones.push(new Instruction('j', label))
     }
+    label(label) {
+        this.instrucciones.push(new Instruction(label+':'));
+    }
 
     ret() {
         this.instrucciones.push(new Instruction('ret'))
@@ -200,6 +213,12 @@ export class Generador {
         }
         this._usedBuiltins.add(builtinName)
         this.jal(builtinName)
+    }
+
+    printSalto() {
+        this.li(r.A0, 10)
+        this.li(r.A7, 11)
+        this.ecall()
     }
 
     printInt(rd = r.A0) {
@@ -392,8 +411,81 @@ export class Generador {
         return object;
     }
 
+    toLowerr() {
+        const endLabel = this.getLabel();
+        const loopLabel = this.getLabel();
+        const skipLowerLabel = this.getLabel();
+    
+        this.pop(r.T0); 
+    
+        this.push(r.T0);
+    
+        this.label(loopLabel);
+        
+        this.lb(r.T1, r.T0);
+
+        this.beqz(r.T1, endLabel);
+    
+        this.li(r.T2, 65);  
+        this.li(r.T3, 90);  
+        this.slt(r.T4, r.T1, r.T2); 
+        this.bnez(r.T4, skipLowerLabel);
+        this.slt(r.T4, r.T3, r.T1);  
+        this.bnez(r.T4, skipLowerLabel);
+
+        this.addi(r.T1, r.T1, 32);
+        
+        this.sb(r.T1, r.T0);
+    
+        this.label(skipLowerLabel);
+        this.addi(r.T0, r.T0, 1);
+        this.j(loopLabel);
+    
+        this.label(endLabel);
+        
+    }
+
+    toUpperr() {
+        const endLabel = this.getLabel();
+        const loopLabel = this.getLabel();
+        const skipUpperLabel = this.getLabel();
+        console.log(endLabel)
+        console.log(loopLabel)
+        console.log(skipUpperLabel)
+    
+    
+        this.pop(r.T0); 
+
+        this.push(r.T0);
+    
+        this.label(loopLabel);
+        
+        this.lb(r.T1, r.T0);
+
+        this.beqz(r.T1, endLabel);
+    
+        this.li(r.T2, 97); 
+        this.li(r.T3, 122);  
+        this.slt(r.T4, r.T1, r.T2); 
+  
+        this.bnez(r.T4, skipUpperLabel);
+ 
+        this.slt(r.T4, r.T3, r.T1);  
+        this.bnez(r.T4, skipUpperLabel); 
+        this.addi(r.T1, r.T1, -32);
+        this.sb(r.T1, r.T0);
+
+        this.label(skipUpperLabel);
+        this.addi(r.T0, r.T0, 1); 
+        this.j(loopLabel);     
+        this.label(endLabel);
+        
+    }
+
+
     getTopObject() {
         return this.objectStack[this.objectStack.length - 1];
+        
     }
 
     /*
