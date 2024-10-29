@@ -299,6 +299,149 @@ export const parseFloat = (code) => {
 
 
 }
+
+/**
+ * 
+ * @param {Generador} code 
+ */
+export const toString = (code) => {
+    code.comment('toString: Convirtiendo número a string')
+    code.push(r.HP) // Guardar la dirección inicial donde se guardará el string
+    
+    // Verificar si el número es negativo
+    const notNegative = code.getLabel()
+    code.li(r.T1, 45) // ASCII del signo menos
+    code.bge(r.A0, r.ZERO, notNegative)
+    code.sb(r.T1, r.HP)
+    code.addi(r.HP, r.HP, 1)
+    // En lugar de neg, usamos substracción de cero
+    code.sub(r.A0, r.ZERO, r.A0) // A0 = 0 - A0 (esto convierte el número a positivo)
+    code.addLabel(notNegative)
+
+    // Convertir dígitos
+    code.add(r.T0, r.A0, r.ZERO) // T0 = número a convertir
+    code.add(r.T1, r.HP, r.ZERO) // T1 = posición actual en el heap
+    
+    // Primera pasada: convertir dígitos en orden inverso
+    const loop1 = code.getLabel()
+    const endLoop1 = code.getLabel()
+    
+    code.addLabel(loop1)
+    code.li(r.T2, 10)
+    code.div(r.T3, r.T0, r.T2) // T3 = T0 / 10
+    code.rem(r.T4, r.T0, r.T2) // T4 = T0 % 10
+    
+    code.addi(r.T4, r.T4, 48) // Convertir a ASCII
+    code.sb(r.T4, r.T1)
+    code.addi(r.T1, r.T1, 1)
+    
+    code.add(r.T0, r.T3, r.ZERO)
+    code.bne(r.T0, r.ZERO, loop1)
+    
+    // Agregar null terminator
+    code.sb(r.ZERO, r.T1)
+    code.addi(r.T1, r.T1, 1)
+    
+    // Invertir la cadena
+    code.pop(r.T0) // T0 = dirección inicial
+    code.addi(r.T1, r.T1, -2) // T1 = última posición (antes del null)
+    
+    const reverseLoop = code.getLabel()
+    const endReverse = code.getLabel()
+    
+    code.addLabel(reverseLoop)
+    code.bge(r.T0, r.T1, endReverse)
+    
+    // Intercambiar caracteres
+    code.lb(r.T2, r.T0)
+    code.lb(r.T3, r.T1)
+    code.sb(r.T3, r.T0)
+    code.sb(r.T2, r.T1)
+    
+    code.addi(r.T0, r.T0, 1)
+    code.addi(r.T1, r.T1, -1)
+    code.j(reverseLoop)
+    
+    code.addLabel(endReverse)
+    code.push(r.HP) // Retornar la dirección del string
+}
+/**
+ * Convierte una cadena a minúsculas
+ * @param {Generador} code
+ */
+export const toLowerCase = (code) => {
+    // A0 -> dirección en heap de la cadena original
+    // result -> push en el stack la dirección en heap de la nueva cadena
+    
+    code.comment('toLowerCase: Convirtiendo string a minúsculas')
+    code.push(r.HP) // Guardar la dirección inicial donde se guardará el string
+    
+    const loop = code.getLabel()
+    const end = code.getLabel()
+    const notUpper = code.getLabel()
+    
+    code.addLabel(loop)
+    code.lb(r.T0, r.A0) // Cargar caracter
+    code.beq(r.T0, r.ZERO, end)
+    
+    // Verificar si es mayúscula (ASCII 65-90)
+    code.li(r.T1, 65)
+    code.li(r.T2, 90)
+    code.blt(r.T0, r.T1, notUpper)
+    code.bgt(r.T0, r.T2, notUpper)
+    
+    // Convertir a minúscula
+    code.addi(r.T0, r.T0, 32)
+    
+    code.addLabel(notUpper)
+    code.sb(r.T0, r.HP)
+    code.addi(r.HP, r.HP, 1)
+    code.addi(r.A0, r.A0, 1)
+    code.j(loop)
+    
+    code.addLabel(end)
+    code.sb(r.ZERO, r.HP)
+    code.addi(r.HP, r.HP, 1)
+}
+
+/**
+ * Convierte una cadena a mayúsculas
+ * @param {Generador} code
+ */
+export const toUpperCase = (code) => {
+    // A0 -> dirección en heap de la cadena original
+    // result -> push en el stack la dirección en heap de la nueva cadena
+    
+    code.comment('toUpperCase: Convirtiendo string a mayúsculas')
+    code.push(r.HP) // Guardar la dirección inicial donde se guardará el string
+    
+    const loop = code.getLabel()
+    const end = code.getLabel()
+    const notLower = code.getLabel()
+    
+    code.addLabel(loop)
+    code.lb(r.T0, r.A0) // Cargar caracter
+    code.beq(r.T0, r.ZERO, end)
+    
+    // Verificar si es minúscula (ASCII 97-122)
+    code.li(r.T1, 97)
+    code.li(r.T2, 122)
+    code.blt(r.T0, r.T1, notLower)
+    code.bgt(r.T0, r.T2, notLower)
+    
+    // Convertir a mayúscula
+    code.addi(r.T0, r.T0, -32)
+    
+    code.addLabel(notLower)
+    code.sb(r.T0, r.HP)
+    code.addi(r.HP, r.HP, 1)
+    code.addi(r.A0, r.A0, 1)
+    code.j(loop)
+    
+    code.addLabel(end)
+    code.sb(r.ZERO, r.HP)
+    code.addi(r.HP, r.HP, 1)
+}
 // export const toString
 
 export const builtins = {
@@ -309,5 +452,8 @@ export const builtins = {
     less,
     greater,
     parseInt,
-    parseFloat
+    parseFloat,
+    toString,
+    toLowerCase,
+    toUpperCase
 }
