@@ -302,11 +302,11 @@ export class CompilerVisitor extends BaseVisitor {
                 this.code.pushObject({ type: 'int', length: 4 });
                 break;
             case '!':
+                valor = this.code.popObject(r.T0);
                 this.code.li(r.T1, 1);
                 this.code.xor(r.T0, r.T0, r.T1);
                 this.code.push(r.T0);
                 this.code.pushObject({type: 'boolean', len: 4});
-                return;
         }
     }
 
@@ -320,22 +320,29 @@ export class CompilerVisitor extends BaseVisitor {
     }
 
     visitPrint(node) {
-        this.code.comment('Print');
-        node.exp.accept(this);
+        let contador = 0;
+        node.outputs.forEach(output => {
+            output.accept(this);
 
-        const isFloat = this.code.getTopObject().type === 'float';
-        const object = this.code.popObject(isFloat ? f.FA0 : r.A0);
+            if(contador >0){
+                this.code.printSpace();
+            }
 
-        const tipoPrint = {
-            'int': () => this.code.printInt(),
-            'string': () => this.code.printString(),
-            'float': () => this.code.printFloat(),
-            'boolean': () => this.code.printBoolean(),
-            'char': () => this.code.printChar(),
-        }
-        
-        tipoPrint[object.type]();
-        this.code.printSalto();
+            const isFloat = this.code.getTopObject().type === 'float';
+            const object = this.code.popObject(isFloat ? f.FA0 : r.A0);
+
+            const tipoPrint ={
+                'int': ()=> this.code.printInt(),
+                'string': ()=> this.code.printString(),
+                'boolean': ()=> this.code.printBoolean(),
+                'char': ()=> this.code.printChar(),
+                'float': ()=> this.code.printFloat()
+            }
+            tipoPrint[object.type]();
+            contador++;
+        });
+
+        this.code.printLn();        
     }
 
     /**

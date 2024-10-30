@@ -56,7 +56,7 @@ Parametros = id:Param _ params:("," _ ids:Param { return ids })* { return [id, .
 
 Param = tipo:(Tipos / Identificador) _ id:Identificador { return crearNodo('param', { id, tipo }) }
 
-Stmt = "System.out.println(" _ exp:Expresion _ ")" _ ";" { return crearNodo('print', { exp }) }
+Stmt = ("System.out.println(") _ exp:Expresion _ exps: ( _ ","_ exps: Expresion {return exps})* _ ")" _ ";" { return crearNodo('print', {outputs: [exp, ...exps]}) }
     / Bloque:Bloque { return Bloque }
     / "if" _ "(" _ cond:Expresion _ ")" _ stmtTrue:Stmt 
       stmtFalse:(
