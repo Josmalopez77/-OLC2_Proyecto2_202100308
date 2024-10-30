@@ -80,6 +80,11 @@ export class Generador {
         this.li(r.A7, 11);
         this.ecall();
     }
+    printSpace() {
+        this.li(r.A0, 32); // 32 es el valor ASCII de un espacio
+        this.li(r.A7, 11); // 11 es el código para imprimir en RISC-V
+        this.ecall(); // Realiza la llamada al sistema
+    }
 
     addi(rd, rs1, inmediato) {
         this.instrucciones.push(new Instruction('addi', rd, rs1, inmediato))
@@ -564,7 +569,7 @@ main:
         this.instrucciones.push(new Instruction('fadd.s', rd, rs1, rs2))
     }
 
-    fsub(rd, rs1, rs2) {
+    fsub(rd, rs1, rs2){
         this.instrucciones.push(new Instruction('fsub.s', rd, rs1, rs2))
     }
     feq(rd, rs1, rs2){
@@ -614,8 +619,8 @@ main:
         this.instrucciones.push(new Instruction('fsw', rs1, `${inmediato}(${rs2})`))
     }
 
-    fcvtsw(rd, rs1) {
-        this.instrucciones.push(new Instruction('fcvt.s.w', rd, rs1))
+    fcvtsw(rd, rs1){
+        this.instrucciones.push(new Instruction('fcvt.s.w', rd, rs1));
     }
 
     print
