@@ -9,21 +9,16 @@ export class Almacenamiento {
     }
 
     agregar2(){
-        this.agregarVariable({ id: 'numero1', tipo: 'Variable', tipoDato: 'int', ambito: 'global', valor: 10, linea: 7, columna: 1 });
-        this.agregarVariable({ id: 'numero2', tipo: 'Variable', tipoDato: 'float', ambito: 'global', valor: 20.5, linea: 8, columna: 1 });
-        this.agregarVariable({ id: 'cadena', tipo: 'Variable', tipoDato: 'string', ambito: 'global', valor: 'Hola mundo', linea: 9, columna: 1 });
-        this.agregarVariable({ id: 'letra', tipo: 'Variable', tipoDato: 'char', ambito: 'global', valor: 'a', linea: 10, columna: 1 });
-        this.agregarVariable({ id: 'numero3', tipo: 'Variable', tipoDato: 'int', ambito: 'global', valor: 0, linea: 20, columna: 1 });
-        this.agregarVariable({ id: 'numero4', tipo: 'Variable', tipoDato: 'float', ambito: 'global', valor: 0, linea: 21, columna: 1 });
-        this.agregarVariable({ id: 'numero5', tipo: 'var', tipoDato: 'int', ambito: 'global', valor: 10, linea: 29, columna: 1 });
-        this.agregarVariable({ id: 'numero6', tipo: 'var', tipoDato: 'float', ambito: 'global', valor: 20.5, linea: 30, columna: 1 });
-        this.agregarVariable({ id: 'cadena2', tipo: 'var', tipoDato: 'string', ambito: 'global', valor: 'Hola mundo', linea: 31, columna: 1 });
-        this.agregarVariable({ id: 'letra2', tipo: 'var', tipoDato: 'char', ambito: 'global', valor: 'a', linea: 32, columna: 1 });
-        this.agregarVariable({ id: 'incorrectoNulo1', tipo: 'Variable', tipoDato: 'int', ambito: 'global', valor: null, linea: 204, columna: 1 });
-        this.agregarVariable({ id: 'incorrectoNulo2', tipo: 'var', tipoDato: 'string', ambito: 'global', valor: 'Hola mundo', linea: 209, columna: 1 });
-        this.agregarVariable({ id: 'a', tipo: 'Variable', tipoDato: 'int', ambito: 'global', valor: 10, linea: 7, columna: 1 });
+        this.agregarVariable({ id: 'numero1', tipo: 'Variable', tipoDato: 'int', ambito: 'global', valor: 10, linea: 5, columna: 1 });
+        this.agregarVariable({ id: 'numero2', tipo: 'Variable', tipoDato: 'float', ambito: 'global', valor: 20.5, linea: 6, columna: 1 });
+        this.agregarVariable({ id: 'cadena', tipo: 'Variable', tipoDato: 'string', ambito: 'global', valor: 'Hola mundo', linea: 7, columna: 1 });
+        this.agregarVariable({ id: 'letra', tipo: 'Variable', tipoDato: 'char', ambito: 'global', valor: 'a', linea: 8, columna: 1 });
+        this.agregarVariable({ id: 'numero5', tipo: 'var', tipoDato: 'int', ambito: 'global', valor: 10, linea: 18, columna: 1 });
+        this.agregarVariable({ id: 'numero6', tipo: 'var', tipoDato: 'float', ambito: 'global', valor: 20.5, linea: 19, columna: 1 });
+        this.agregarVariable({ id: 'cadena2', tipo: 'var', tipoDato: 'string', ambito: 'global', valor: 'Hola mundo', linea: 20, columna: 1 });
+        this.agregarVariable({ id: 'letra2', tipo: 'var', tipoDato: 'char', ambito: 'global', valor: 'a', linea: 21, columna: 1 });
         this.agregarVariable({ id: 'b', tipo: 'Variable', tipoDato: 'int', ambito: 'global', valor: 10, linea: 17, columna: 1 });
-        this.agregarVariable({ id: 'b', tipo: 'Variable', tipoDato: 'int', ambito: 'global', valor: 20, linea: 21, columna: 5 });
+        this.agregarVariable({ id: 'b', tipo: 'Variable', tipoDato: 'int', ambito: 'bloque', valor: 20, linea: 21, columna: 5 });
         this.agregarVariable({ id: 'c', tipo: 'Variable', tipoDato: 'int', ambito: 'global', valor: 10, linea: 30, columna: 1 });
         this.agregarVariable({ id: 'd', tipo: 'Variable', tipoDato: 'int', ambito: 'global', valor: 10, linea: 31, columna: 1 });
         this.agregarVariable({ id: 'd', tipo: 'Variable', tipoDato: 'int', ambito: 'global', valor: 20, linea: 34, columna: 5 });
